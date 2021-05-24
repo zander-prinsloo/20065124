@@ -3,7 +3,7 @@
 # Remove comments and add values where applicable.
 # The descriptions below should be self-explanatory
 
-title: "Question X: "
+title: "Question 3: How do media outlets use Twitter?"
 #subtitle: "This will appear as Right Header"
 
 documentclass: "elsarticle"
@@ -25,7 +25,7 @@ Thesis_FP: FALSE
 # --------- Front Page
 # Comment: ----- Follow this pattern for up to 5 authors
 AddTitle: TRUE # Use FALSE when submitting to peer reviewed platform. This will remove author names.
-Author1: "Zander Prinsloo^[__Contributions:__  \\newline _The author would like Nico Katzke for ._]"  # First Author - note the thanks message displayed as an italic footnote of first page.
+Author1: "Zander Prinsloo^[__Contributions:__  \\newline _The author would like Nico Katzke for lecturing._]"  # First Author - note the thanks message displayed as an italic footnote of first page.
 Ref1: "Stellenbosch University" # First Author's Affiliation
 Email1: "20065124\\@sun.ac.za" # First Author's Email address
 
@@ -84,7 +84,7 @@ output:
     fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
     fig_height: 3.5
 abstract: |
-    This article investigates SOMETHING. It is the answer to question X. 
+    This article investigates how media outlets use Twitter. It is the answer to question 3. 
 ---
 
 <!-- First: Set your default preferences for chunk options: -->
@@ -106,11 +106,18 @@ p_load(tidyverse, lubridate, xtable)
 # This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
 
 # Source Functions
-list.files('Question1/code/', full.names = T, recursive = T) %>% 
+list.files('Question3/code/', full.names = T, recursive = T) %>% 
     as.list() %>% 
     walk(~source(.))
 
+source("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/Question3/code/plot1_q3.R")
+
 # Data
+df_country <- read_csv("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/Country_list.csv")
+country_names <- colnames(df_country)
+df_bbc <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_bbc.rds")
+df_cnn <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_cnn.rds")
+df_eco <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_eco.rds")
 
 
 ```
@@ -122,39 +129,130 @@ list.files('Question1/code/', full.names = T, recursive = T) %>%
 
 # Introduction \label{Introduction}
 
-
+In this question I investigate the tweets by different media outlets
 
 # Data
 
-
-
-# Part 1
-
-
-
-```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+The data is all the tweets from BBC, Economist, and CNN from `r min(df_bbc$date)` until `r max(df_bbc$date)`. 
 
 
 
+# Q1a
+
+For this question I will give a barplot to show the composition of tweets that use photos and videos for the different media outlets
+
+```{r}
+df_photo <- bind_rows(
+  df_bbc %>% 
+    select(photos, video) %>% 
+    mutate(photos = ifelse(photos=="[]", 0, 1), 
+                      Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "BBC"),
+  df_cnn %>% 
+    select(photos, video) %>% 
+    mutate(photos = ifelse(photos=="[]", 0, 1), 
+           Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "CNN"), 
+  df_eco %>% 
+    select(photos, video) %>% 
+    mutate(photos = ifelse(photos=="[]", 0, 1), 
+                      Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "Eco")) 
+```
+
+
+
+
+```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Compare Videos and Photos of Outlets \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+
+
+plot1_q3 <- function(df_bbc, df_cnn, df_eco, title, subtitle, Ylab, Xlab){
+
+    df_use <- bind_rows(
+        df_bbc %>% 
+            select(photos, video) %>% 
+            mutate(photos = ifelse(photos=="[]", 0, 1), 
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "BBC"),
+        df_cnn %>% 
+            select(photos, video) %>% 
+            mutate(photos = ifelse(photos=="[]", 0, 1), 
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "CNN"), 
+        df_eco %>% 
+            select(photos, video) %>% 
+            mutate(photos = ifelse(photos=="[]", 0, 1), 
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "Eco")) 
+    
+    g <- ggplot(df_photo) +
+        geom_bar(aes(x = Outlet, colour = Media, fill = Media))+
+        labs(title = title, 
+             subtitle = subtitle, 
+             y = Ylab, 
+             x = Xlab)
+    
+    g
+    
+}
+
+
+plot1_q3(df_bbc, df_eco, df_cnn, 
+         title = "Compare Photo/Video Usage of Main Outlets", 
+         subtitle = "Comparison of Photos and Videos in Tweets", 
+         Xlab = "Media Outlet", 
+         Ylab = "Count")
 
 
 ```
 
 
 
+
+
+
+
+
+# Question 3b
+
+Now I do a similar plot to compare the quantity of hashtags
 
 
 ```{r Figure2, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
 
+pacman::p_load(lubridate)
+df_hashtags <- bind_rows(
+  df_bbc %>% 
+    select(hashtags, date) %>% 
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1),
+           Outlet = c("BBC"),
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4)),
+  df_cnn %>% 
+    select(hashtags, date) %>% 
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1), 
+           Outlet = "CNN",
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4)), 
+  df_eco %>% 
+    select(hashtags, date) %>% 
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1),
+           Outlet = "Eco",
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4))) %>% 
+  group_by(Outlet, year) %>% 
+  summarise(TotalHashtags = sum(hashtags))
+
+pacman::p_load(ggpubr)
+
+g2 <- ggplot(data = df_hashtags) +
+  geom_bar(mappings = aes(x = year,y = TotalHashtags, colour = Outlets, fill = Outlets))
+
+g2
 
 
 
 ```
-
-
-
-# Part 2
-
 
 
 ```{r ShortTable, results = 'asis'}
