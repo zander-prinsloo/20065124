@@ -1,233 +1,67 @@
 ---
-# IMPORTANT: Change settings here, but DO NOT change the spacing.
-# Remove comments and add values where applicable.
-# The descriptions below should be self-explanatory
-
-title: "Question 2: "
-#subtitle: "This will appear as Right Header"
-
-documentclass: "elsarticle"
-
-# --------- Thesis title (Optional - set to FALSE by default).
-# You can move the details below around as you please.
-Thesis_FP: FALSE
-# Entry1: "An unbelievable study with a title spanning multiple lines."
-# Entry2: "\\textbf{Nico Katzke}" # textbf for bold
-# Entry3: "A thesis submitted toward the degree of Doctor of Philosophy"
-# Uni_Logo: Tex/Logo.png # Place a logo in the indicated location (from your root, e.g. defaults to ~/Tex/Logo.png) and uncomment this line. Leave uncommented for no image
-# Logo_width: 0.3 # If using a logo - use this to set width (size) of image
-# Entry4: "Under the supervision of: \\vfill Prof. Joe Smith and Dr. Frank Smith"
-# Entry5: "Stellenbosch University"
-# Entry6: April 2020
-# Entry7:
-# Entry8:
-
-# --------- Front Page
-# Comment: ----- Follow this pattern for up to 5 authors
-AddTitle: TRUE # Use FALSE when submitting to peer reviewed platform. This will remove author names.
-Author1: "Zander Prinsloo^[__Contributions:__  \\newline _The author would like Nico Katzke for ._]"  # First Author - note the thanks message displayed as an italic footnote of first page.
-Ref1: "Stellenbosch University" # First Author's Affiliation
-Email1: "20065124\\@sun.ac.za" # First Author's Email address
-
-
-CorrespAuthor_1: TRUE  # If corresponding author is author 3, e.g., use CorrespAuthor_3: TRUE
-
-# keywords: "Multivariate GARCH \\sep Kalman Filter \\sep Copula" # Use \\sep to separate
-# JELCodes: "L250 \\sep L100"
-
-# ----- Manage headers and footers:
-#BottomLFooter: $Title$
-#BottomCFooter:
-#TopLHeader: \leftmark # Adds section name at topleft. Remove comment to add it.
-BottomRFooter: "\\footnotesize Page \\thepage" # Add a '#' before this line to remove footer.
-addtoprule: TRUE
-addfootrule: TRUE               # Use if footers added. Add '#' to remove line.
-
-# --------- page margins:
-margin: 2.3 # Sides
-bottom: 2 # bottom
-top: 2.5 # Top
-HardSet_layout: TRUE # Hard-set the spacing of words in your document. This will stop LaTeX squashing text to fit on pages, e.g.
-# This is done by hard-setting the spacing dimensions. Set to FALSE if you want LaTeX to optimize this for your paper.
-
-# --------- Line numbers
-linenumbers: FALSE # Used when submitting to journal
-
-# ---------- References settings:
-# You can download cls format here: https://www.zotero.org/ - simply search for your institution. You can also edit and save cls formats here: https://editor.citationstyles.org/about/
-# Hit download, store it in Tex/ folder, and change reference below - easy.
-bibliography: Tex/ref.bib       # Do not edit: Keep this naming convention and location.
-csl: Tex/harvard-stellenbosch-university.csl # referencing format used.
-# By default, the bibliography only displays the cited references. If you want to change this, you can comment out one of the following:
-#nocite: '@*' # Add all items in bibliography, whether cited or not
-# nocite: |  # add specific references that aren't cited
-#  @grinold2000
-#  @Someoneelse2010
-
-# ---------- General:
-RemovePreprintSubmittedTo: TRUE  # Removes the 'preprint submitted to...' at bottom of titlepage
-Journal: "Journal of Finance"   # Journal that the paper will be submitting to, if RemovePreprintSubmittedTo is set to TRUE.
-toc: FALSE                       # Add a table of contents
-numbersections: TRUE             # Should sections (and thus figures and tables) be numbered?
-fontsize: 11pt                  # Set fontsize
-linestretch: 1.2                # Set distance between lines.
-link-citations: TRUE            # This creates dynamic links to the papers in reference list.
-
-### Adding additional latex packages:
-# header-includes:
-#    - \usepackage{colortbl} # Add additional packages here.
-
+title: "Question2"
+author: "Zander Prinsloo"
+date: "5/24/2021"
 output:
-  pdf_document:
-    keep_tex: TRUE
-    template: Tex/TexDefault.txt
-    fig_width: 3.5 # Adjust default figure sizes. This can also be done in the chunks of the text.
-    fig_height: 3.5
-abstract: |
-    This article investigates SOMETHING. It is the answer to question X. 
+  pdf_document: default
+  html_document: default
 ---
 
-<!-- First: Set your default preferences for chunk options: -->
 
-<!-- If you want a chunk's code to be printed, set echo = TRUE. message = FALSE stops R printing ugly package loading details in your final paper too. I also suggest setting warning = FALSE and checking for warnings in R, else you might find ugly warnings in your paper. -->
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
-# Note: Include = FALSE implies the code is executed, but not printed in your pdf.
-# warning and message = FALSE implies ugly messages and warnings are removed from your pdf.
-# These should be picked up when you execute the command chunks (code sections below) in your rmd, not printed in your paper!
-
-# Load Packages
-if(!require(pacman))(install.packages("pacman")) # in case someone has not installed `pacman`
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5)
+options(dplyr.summarise.inform=F)
+if(!require("pacman")) install.packages("pacman")
 library(pacman)
-p_load(tidyverse, lubridate, xtable)
+p_load(tidyverse)
 
-# Notice that as you are working in a .Rproj file (I am assuming you are) - the relative paths of your directories start at your specified root.
-# This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
-
-# Source Functions
-list.files('Question1/code/', full.names = T, recursive = T) %>% 
-    as.list() %>% 
-    walk(~source(.))
-
-# Data
-
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+list.files('..//Question1/code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+list.files('..//Question2/code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+# Data loading:
+df_forbes <- fn_Collate_Data(path = "/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Forbes/", ext = "csv")
 
 ```
 
-
-<!-- ############################## -->
-<!-- # Start Writing here: -->
-<!-- ############################## -->
-
-# Introduction \label{Introduction}
+# Task
+Some interesting findings using the Forbes data set
 
 
+# Plot 1
 
-# Data
+```{r Figure1, ,  warning =  FALSE, fig.align = 'center', fig.cap = "Names of Rich People \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
 
-
-
-# Part 1
-
-
-
-```{r Figure1,  warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
-
-
+g1 <- plot1_Q2(df = df_forbes, title = "Common Names of Rich People", 
+               Xlab = "Names", 
+               Ylab = "Frequency of Names")
+g1
 
 
 
 ```
 
+This plot in \ref{Figure1} shows that there is a surprisingly high requency of rich people with names John, Mike/Michael, James, or Bill. Similarly, there are quite a number of families that make up the Billionaires on Forbes' list.
+
+
+
+<!-- ```{r} -->
+<!-- df_use <- df_forbes %>%  -->
+<!--     mutate(Common = ifelse(grepl(pattern = "John|Mike|Michael|James|Bill", x = Name), 1, 0),  -->
+<!--               Family = ifelse(grepl(pattern = "family", x = Name), 1, 0)) %>% -->
+<!--     summarise(Type = ifelse(Common==1, "Common", ifelse(Family==1, "Family", "Neither"))) %>%  -->
+<!--     group_by(Type) %>%  -->
+<!--     summarise(Counts = n()) -->
+
+<!-- ggplot(df_use, aes(x = Type, y = Counts)) + -->
+<!--   geom_bar(fill = "#0073C2FF", stat = "identity") + -->
+<!--   geom_text(aes(label = Counts), vjust = -0.3) +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
 
 
 
 
-```{r Figure2, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
 
 
-
-
-```
-
-
-
-# Part 2
-
-
-
-```{r ShortTable, results = 'asis'}
-
-
-# table <- xtable(data, caption = "Short Table Example \\label{tab1}")
-#   print.xtable(table,
-#              # tabular.environment = "longtable",
-#              floating = TRUE,
-#              table.placement = 'H',
-#              # scalebox = 0.3,
-#              comment = FALSE,
-#              caption.placement = 'bottom'
-#              )
-
-```
-
-
-
-```{r LongTable, results = 'asis'}
-
-# library(xtable)
-# 
-# data = mtcars %>% tibble::as_tibble()
-#   addtorow          <- list()
-#   addtorow$pos      <- list()
-#   addtorow$pos[[1]] <- c(0)
-#   addtorow$command  <- c(paste("\\hline \n",
-#                                "\\endhead \n",
-#                                "\\hline \n",
-#                                "{\\footnotesize Continued on next page} \n",
-#                                "\\endfoot \n",
-#                                "\\endlastfoot \n",sep=""))
-# table <- xtable(data, caption = "Long Table Example")
-#   print.xtable(table,
-#              tabular.environment = "longtable",
-#              floating = FALSE, # Leave this as is.
-#              table.placement = 'H', # Leave this as is.
-#              booktabs = T, # Aesthetics
-#              include.rownames = FALSE,  # Typically you don't want this in a table.
-#              add.to.row = addtorow, # For adding the Continued on next page part...
-#              comment = FALSE,
-#              caption.placement = 'top',  # Where do you want the caption?
-#              size="\\fontsize{12pt}{13pt}\\selectfont"  # Size of text in table..
-#              )
-# # See https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf for table inspiration
-```
-
-\hfill
-
-<!-- hfill can be used to create a space, like here between text and table. -->
-
-
-
-# Conclusion
-
-
-
-<!-- Make title of bibliography here: -->
-<!-- \newpage -->
-
-\newpage
-
-# References {-}
-
-<div id="refs"></div>
-
-
-# Appendix {-}
-
-## Appendix A {-}
-
-Some appendix information here
-
-## Appendix B {-}
 
