@@ -44,8 +44,8 @@ separate chunks below.
 Garbage Collection:
 
     ##           used (Mb) gc trigger  (Mb) limit (Mb) max used (Mb)
-    ## Ncells 1032529 55.2    2046590 109.3         NA  1723179 92.1
-    ## Vcells 1816647 13.9    8388608  64.0      16384  2746702 21.0
+    ## Ncells 1032771 55.2    2046882 109.4         NA  1720798   92
+    ## Vcells 1817880 13.9    8388608  64.0      16384  2747585   21
 
 ## Task
 
@@ -148,50 +148,51 @@ Jagged Line Plot of Gross and Rating
 
 </div>
 
-<!-- # Question 2 -->
-<!-- In question -->
-<!-- ### Data and Code -->
-<!-- ```{r} -->
-<!-- # Load Packages -->
-<!-- if(!require("pacman")) install.packages("pacman") -->
-<!-- library(pacman) -->
-<!-- p_load(tidyverse, lubdridate) -->
-<!-- # Source Question 1 code -->
-<!-- list.files('Question1/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%   -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 2 code -->
-<!-- list.files('Question2/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-<!-- # Data loading: -->
-<!--     Loc <- "Question2/data/!!NAME!!/" -->
-<!--     df_q2 <- read_rds(glue::glue("{Loc}WineMag.rds")) -->
-<!--     Fruitlist <- read_table("Question2/data/wine/Fruitlist.txt") -->
-<!-- ``` -->
-<!-- ### Question 2a -->
-<!-- ### Question 2b -->
-<!-- # Question 3 -->
-<!-- ### Data and Code -->
-<!-- ```{r} -->
-<!-- # Load Packages -->
-<!-- if(!require("pacman")) install.packages("pacman") -->
-<!-- library(pacman) -->
-<!-- p_load(tidyverse, lubdridate) -->
-<!-- # Source Question 1 code -->
-<!-- list.files('Question1/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%   -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 2 code -->
-<!-- list.files('Question2/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 3 code -->
-<!-- list.files('Question3/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-<!-- # Data loading: -->
-<!--     Loc <- "Question3/data/!!NAME!!/" -->
-<!--     df_q2 <- read_rds(glue::glue("Question3/data/!!!NAME!!!.rds")) -->
-<!--     Fruitlist <- read_table("Question2/data/wine/Fruitlist.txt") -->
-<!-- ``` -->
+# Question 2
+
+# Task
+
+Some interesting findings using the Forbes data set
+
+# Plot 1
+
+<div class="figure" style="text-align: center">
+
+<img src="README_files/figure-markdown_github/Figure1, -1.png" alt="Names of Rich People \label{Figure1}"  />
+<p class="caption">
+Names of Rich People
+</p>
+
+</div>
+
+This plot in shows that there is a surprisingly high requency of rich
+people with (‘Common’) names John, Mike/Michael, James, or Bill.
+Similarly, there are quite a number of families that make up the
+Billionaires on Forbes’ list.
+
+# Question 3
+
+For this question I will give a barplot to show the composition of
+tweets that use photos and videos for the different media outlets
+
+<div class="figure" style="text-align: center">
+
+<img src="README_files/figure-markdown_github/Figure5-1.png" alt="Compare Videos and Photos of Outlets \label{Figure1}"  />
+<p class="caption">
+Compare Videos and Photos of Outlets
+</p>
+
+</div>
+
+# Question 3b
+
+Now I do a similar plot to compare the quantity of hashtags
+
+<div class="figure" style="text-align: center">
+
+<img src="README_files/figure-markdown_github/Figure6-1.png" alt="Caption Here \label{Figure2}"  />
+<p class="caption">
+Caption Here
+</p>
+
+</div>

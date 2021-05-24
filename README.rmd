@@ -183,6 +183,153 @@ g3 <- Lineplot_Q1(df = df_movies,
 g3
 ```
 
+# Question 2
+
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+options(dplyr.summarise.inform=F)
+if(!require("pacman")) install.packages("pacman")
+library(pacman)
+p_load(tidyverse)
+
+list.files('code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+list.files('..//Question1/code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+list.files('..//Question2/code/', full.names = T, recursive = T) %>% as.list() %>% walk(~source(.))
+
+source("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/Question2/code/fn_Collate_Data.R")
+source("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/Question2/code/plot1_Q2.R")
+
+# Data loading:
+df_forbes <- fn_Collate_Data(path = "/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Forbes/", ext = "csv")
+
+```
+
+# Task
+Some interesting findings using the Forbes data set
+
+
+# Plot 1
+
+```{r Figure1, ,  warning =  FALSE, fig.align = 'center', fig.cap = "Names of Rich People \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+
+g1 <- plot1_Q2(df = df_forbes, title = "Common Names of Rich People", 
+               Xlab = "Names", 
+               Ylab = "Frequency of Names")
+g1
+
+
+
+```
+
+This plot in \ref{Figure1} shows that there is a surprisingly high requency of rich people with ('Common') names John, Mike/Michael, James, or Bill. Similarly, there are quite a number of families that make up the Billionaires on Forbes' list.
+
+
+
+
+
+
+# Question 3
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 5, fig.pos="H", fig.pos = 'H')
+# Note: Include = FALSE implies the code is executed, but not printed in your pdf.
+# warning and message = FALSE implies ugly messages and warnings are removed from your pdf.
+# These should be picked up when you execute the command chunks (code sections below) in your rmd, not printed in your paper!
+
+# Load Packages
+if(!require(pacman))(install.packages("pacman")) # in case someone has not installed `pacman`
+library(pacman)
+p_load(tidyverse, lubridate, xtable)
+
+# Notice that as you are working in a .Rproj file (I am assuming you are) - the relative paths of your directories start at your specified root.
+# This means that when working in a .Rproj file, you never need to use getwd() - it is assumed as your base root automatically.
+
+# Source Functions
+list.files('Question3/code/', full.names = T, recursive = T) %>%
+    as.list() %>%
+    walk(~source(.))
+
+source("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/Question3/code/plot1_q3.R")
+
+# Data
+df_country <- read_csv("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/Country_list.csv")
+country_names <- colnames(df_country)
+df_bbc <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_bbc.rds")
+df_cnn <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_cnn.rds")
+df_eco <- readRDS("/Users/zanderprinsloo/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Desktop – MacBookPro’s MacBook Pro/Academic/Postgraduate/Masters/Modules/Data Science/Test/20065124/data/Tweets/tweets_eco.rds")
+
+```
+
+
+
+For this question I will give a barplot to show the composition of tweets that use photos and videos for the different media outlets
+
+```{r}
+df_photo <- bind_rows(
+  df_bbc %>%
+    select(photos, video) %>%
+    mutate(photos = ifelse(photos=="[]", 0, 1),
+                      Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "BBC"),
+  df_cnn %>%
+    select(photos, video) %>%
+    mutate(photos = ifelse(photos=="[]", 0, 1),
+           Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "CNN"),
+  df_eco %>%
+    select(photos, video) %>%
+    mutate(photos = ifelse(photos=="[]", 0, 1),
+                      Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+           Outlet = "Eco"))
+```
+
+
+
+
+```{r Figure5,  warning =  FALSE, fig.align = 'center', fig.cap = "Compare Videos and Photos of Outlets \\label{Figure1}", fig.ext = 'png', fig.height = 3, fig.width = 6}
+
+
+plot1_q3 <- function(df_bbc, df_cnn, df_eco, title, subtitle, Ylab, Xlab){
+
+    df_use <- bind_rows(
+        df_bbc %>%
+            select(photos, video) %>%
+            mutate(photos = ifelse(photos=="[]", 0, 1),
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "BBC"),
+        df_cnn %>%
+            select(photos, video) %>%
+            mutate(photos = ifelse(photos=="[]", 0, 1),
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "CNN"),
+        df_eco %>%
+            select(photos, video) %>%
+            mutate(photos = ifelse(photos=="[]", 0, 1),
+                   Media = ifelse(photos==1, "photo", ifelse(video==1, "video", "none")),
+                   Outlet = "Eco"))
+
+    g <- ggplot(df_photo) +
+        geom_bar(aes(x = Outlet, colour = Media, fill = Media))+
+        labs(title = title,
+             subtitle = subtitle,
+             y = Ylab,
+             x = Xlab)
+
+    g
+
+}
+
+
+plot1_q3(df_bbc, df_eco, df_cnn,
+         title = "Compare Photo/Video Usage of Main Outlets",
+         subtitle = "Comparison of Photos and Videos in Tweets",
+         Xlab = "Media Outlet",
+         Ylab = "Count")
+
+
+```
 
 
 
@@ -191,69 +338,49 @@ g3
 
 
 
-<!-- # Question 2 -->
+# Question 3b
 
-<!-- In question -->
-
-<!-- ### Data and Code -->
-
-<!-- ```{r} -->
-<!-- # Load Packages -->
-<!-- if(!require("pacman")) install.packages("pacman") -->
-<!-- library(pacman) -->
-<!-- p_load(tidyverse, lubdridate) -->
-
-<!-- # Source Question 1 code -->
-<!-- list.files('Question1/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%   -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 2 code -->
-<!-- list.files('Question2/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-
-<!-- # Data loading: -->
-<!--     Loc <- "Question2/data/!!NAME!!/" -->
-<!--     df_q2 <- read_rds(glue::glue("{Loc}WineMag.rds")) -->
-<!--     Fruitlist <- read_table("Question2/data/wine/Fruitlist.txt") -->
-<!-- ``` -->
+Now I do a similar plot to compare the quantity of hashtags
 
 
-<!-- ### Question 2a -->
+```{r Figure6, warning =  FALSE, fig.align = 'center', fig.cap = "Caption Here \\label{Figure2}", fig.height = 3, fig.width = 6, dev = 'png'}
+
+pacman::p_load(lubridate)
+df_hashtags <- bind_rows(
+  df_bbc %>%
+    select(hashtags, date) %>%
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1),
+           Outlet = c("BBC"),
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4)),
+  df_cnn %>%
+    select(hashtags, date) %>%
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1),
+           Outlet = "CNN",
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4)),
+  df_eco %>%
+    select(hashtags, date) %>%
+    mutate(hashtags = ifelse(hashtags=="[]", 0, 1),
+           Outlet = "Eco",
+           date = as.character(date),
+           year = str_sub(date, start = 1, end = 4))) %>%
+  group_by(Outlet, year) %>%
+  summarise(TotalHashtags = sum(hashtags))
+
+pacman::p_load(ggpubr)
+
+g2 <- ggplot(data = df_hashtags) +
+  geom_bar(aes(x = year, y = TotalHashtags, colour = Outlet, fill = Outlet), stat = "identity") + 
+  labs(title = "Hashtags")
+
+g2
+
+```
 
 
-<!-- ### Question 2b -->
 
 
-<!-- # Question 3 -->
-
-
-<!-- ### Data and Code -->
-
-<!-- ```{r} -->
-<!-- # Load Packages -->
-<!-- if(!require("pacman")) install.packages("pacman") -->
-<!-- library(pacman) -->
-<!-- p_load(tidyverse, lubdridate) -->
-
-<!-- # Source Question 1 code -->
-<!-- list.files('Question1/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%   -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 2 code -->
-<!-- list.files('Question2/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-<!-- # Source Question 3 code -->
-<!-- list.files('Question3/code/', full.names = T, recursive = T) %>%  -->
-<!--     as.list() %>%  -->
-<!--     walk(~source(.)) -->
-
-<!-- # Data loading: -->
-<!--     Loc <- "Question3/data/!!NAME!!/" -->
-<!--     df_q2 <- read_rds(glue::glue("Question3/data/!!!NAME!!!.rds")) -->
-<!--     Fruitlist <- read_table("Question2/data/wine/Fruitlist.txt") -->
-<!-- ``` -->
 
 
 

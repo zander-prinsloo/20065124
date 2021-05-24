@@ -20,18 +20,18 @@ fn_Collate_Data <- function(path, ext){
         data_files, # full names of data files to import
         read_csv, # import each as tibble
         col_names = T, # keep column names
-        col_types = cols(), # suppress messages
-        skip_empty_rows = T,
-        quoted_na = "string"
+        col_types = cols() # suppress messages
+        # skip_empty_rows = T,
+        # quoted_na = "string"
     )
 
-    all_numeric <- function(df){
+    all_character <- function(df){
         df <- df %>%
-            select(-Age)
+            mutate(Age = as.character(Age))
         df
     }
 
-    data_list <- lapply(FUN = all_numeric)
+    data_list <- lapply(X = data_list, FUN = all_character)
 
     # Check whether each data set has the same column names
     for(i in 1:length(data_list)){

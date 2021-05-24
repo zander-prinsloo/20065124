@@ -241,12 +241,15 @@ df_hashtags <- bind_rows(
            date = as.character(date),
            year = str_sub(date, start = 1, end = 4))) %>% 
   group_by(Outlet, year) %>% 
-  summarise(TotalHashtags = sum(hashtags))
+  summarise(TotalHashtags = sum(hashtags)) %>% 
+  ungroup() %>% 
+  mutate(year = as.numeric(year))
 
 pacman::p_load(ggpubr)
 
 g2 <- ggplot(data = df_hashtags) +
-  geom_bar(mappings = aes(x = year,y = TotalHashtags, colour = Outlets, fill = Outlets))
+  geom_bar(aes(x = year, y = TotalHashtags, colour = Outlet, fill = Outlet), stat = "identity") + 
+  labs(title = "Hashtags")
 
 g2
 
